@@ -1,3 +1,3 @@
-const API = "https://carteira-4a45.onrender.com";
+const API = "https://carteira-mi2h.onrender.com";
 
 export default API;

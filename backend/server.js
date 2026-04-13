@@ -6,21 +6,19 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 🔐 SUPABASE
+// 🔐 SUPABASE (TEM DE SER REAL)
 const supabase = createClient(
-  "https://xcjblzlmvusivmxuhiim.supabase.co",
-  "SUA_ANON_KEY_AQUI"
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY
 );
 
 // =========================
-// 🔹 REGISTER
+// ROUTES (iguais às tuas)
 // =========================
+
+// register
 app.post("/register", async (req, res) => {
   const { nome, email, password } = req.body;
-
-  if (!nome || !email || !password) {
-    return res.status(400).json({ erro: "Dados em falta" });
-  }
 
   const { data, error } = await supabase
     .from("utilizadores")
@@ -28,16 +26,12 @@ app.post("/register", async (req, res) => {
     .select()
     .single();
 
-  if (error) {
-    return res.status(400).json({ erro: "Email já existe" });
-  }
+  if (error) return res.status(400).json({ erro: "Email já existe" });
 
   res.json(data);
 });
 
-// =========================
-// 🔹 LOGIN
-// =========================
+// login
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -48,48 +42,31 @@ app.post("/login", async (req, res) => {
     .eq("password", password)
     .single();
 
-  if (error || !data) {
+  if (error || !data)
     return res.status(401).json({ erro: "Login inválido" });
-  }
 
   res.json(data);
 });
 
-// =========================
-// 🔹 GET TRANSAÇÕES
-// =========================
+// transações
 app.get("/transacoes/:userId", async (req, res) => {
-  const { userId } = req.params;
-
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("transacoes")
     .select("*")
-    .eq("utilizador_id", userId);
-
-  if (error) {
-    return res.status(400).json({ erro: "Erro ao buscar transações" });
-  }
+    .eq("utilizador_id", req.params.userId);
 
   res.json(data);
 });
 
-// =========================
-// 🔹 ADD TRANSAÇÃO (COM SEGURANÇA)
-// =========================
+// add transação
 app.post("/transacoes", async (req, res) => {
   const { descricao, valor, tipo, utilizador_id } = req.body;
 
   const v = Number(valor);
 
-  if (!descricao || !v || !tipo || !utilizador_id) {
+  if (!descricao || !v || !tipo || !utilizador_id)
     return res.status(400).json({ erro: "Dados inválidos" });
-  }
 
-  if (v <= 0) {
-    return res.status(400).json({ erro: "Valor tem de ser maior que 0" });
-  }
-
-  // 🔹 buscar transações do user
   const { data: transacoes } = await supabase
     .from("transacoes")
     .select("*")
@@ -99,63 +76,23 @@ app.post("/transacoes", async (req, res) => {
     return x.tipo === "entrada" ? t + x.valor : t - x.valor;
   }, 0);
 
-  // 🚨 impedir saldo negativo
-  if (tipo === "saida" && saldo - v < 0) {
-    return res.status(400).json({ erro: "Saldo insuficiente 💸" });
-  }
+  if (tipo === "saida" && saldo - v < 0)
+    return res.status(400).json({ erro: "Saldo insuficiente" });
 
   const { data, error } = await supabase
     .from("transacoes")
-    .insert([
-      {
-        descricao,
-        valor: v,
-        tipo,
-        utilizador_id,
-      },
-    ])
+    .insert([{ descricao, valor: v, tipo, utilizador_id }])
     .select()
     .single();
 
-  if (error) {
-    return res.status(400).json({ erro: "Erro ao criar transação" });
-  }
+  if (error) return res.status(400).json({ erro: "Erro ao criar" });
 
   res.json(data);
 });
 
-// =========================
-// 🔹 DELETE TRANSAÇÃO
-// =========================
-app.delete("/transacoes/:id", async (req, res) => {
-  const { id } = req.params;
+// start
+const PORT = process.env.PORT || 3000;
 
-  const { error } = await supabase
-    .from("transacoes")
-    .delete()
-    .eq("id", id);
-
-  if (error) {
-    return res.status(400).json({ erro: "Erro ao eliminar" });
-  }
-
-  res.json({ ok: true });
-});
-
-// =========================
-// 🔹 TEST SUPABASE
-// =========================
-app.get("/test", async (req, res) => {
-  const { data, error } = await supabase
-    .from("utilizadores")
-    .select("*");
-
-  res.json({ data, error });
-});
-
-// =========================
-// 🔹 START SERVER
-// =========================
-app.listen(3000, () => {
-  console.log("Servidor a correr em https://carteira-backend.onrender.com");
+app.listen(PORT, () => {
+  console.log("Servidor a correr");
 });
