@@ -1,0 +1,184 @@
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: radial-gradient(circle at top, #111 0%, #050505 100%);
+  color: #ffffff;
+}
+
+/* CONTAINER */
+.app {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 30px;
+  background: rgba(20, 20, 20, 0.7);
+  border-radius: 25px;
+  box-shadow: 
+    0 20px 60px rgba(0,0,0,0.9),
+    inset 0 0 0 1px rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* TÍTULO */
+h1 {
+  font-weight: 700;
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  letter-spacing: 1px;
+}
+
+/* SALDO */
+.saldo-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 25px;
+  font-size: 1.2rem;
+}
+
+h2.positivo {
+  color: #22c55e;
+  text-shadow: 0 0 10px rgba(34,197,94,0.4);
+}
+
+h2.negativo {
+  color: #ef4444;
+  text-shadow: 0 0 10px rgba(239,68,68,0.4);
+}
+
+/* FORM */
+form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+/* INPUTS */
+input, select {
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #222;
+  background: #0f0f0f;
+  color: white;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border: 1px solid #ffffff;
+  box-shadow: 0 0 10px rgba(255,255,255,0.25);
+  transform: scale(1.02);
+}
+
+/* BOTÃO */
+button {
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #000;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(34,197,94,0.3);
+}
+
+/* LISTA */
+.lista {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ITEM */
+.lista div {
+  background: rgba(15,15,15,0.8);
+  border: 1px solid #1f1f1f;
+  padding: 14px;
+  border-radius: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+/* ENTRADA */
+.lista div.entrada {
+  border-left: 6px solid #22c55e;
+}
+
+/* SAÍDA */
+.lista div.saida {
+  border-left: 6px solid #ef4444;
+}
+
+/* HOVER */
+.lista div:hover {
+  background: #1a1a1a;
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+}
+
+/* 📱 MOBILE FIRST AJUSTES */
+@media (max-width: 600px) {
+  .app {
+    margin: 0;
+    min-height: 100vh;
+    border-radius: 0;
+    padding: 20px 15px;
+    justify-content: flex-start;
+  }
+
+  h1 {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  .saldo-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    font-size: 1rem;
+  }
+
+  .saldo-container span {
+    color: #888;
+  }
+
+  .saldo-container h2 {
+    font-size: 2rem;
+  }
+
+  form {
+    gap: 10px;
+  }
+
+  input, select, button {
+    font-size: 0.95rem;
+    padding: 12px;
+  }
+
+  .lista div {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 0.95rem;
+  }
+
+  .lista div span:last-child {
+    align-self: flex-end;
+    font-weight: bold;
+  }
+}

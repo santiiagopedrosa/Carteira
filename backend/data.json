@@ -1,0 +1,12 @@
+[
+  {
+    "descricao": "valor inicial",
+    "valor": 460,
+    "tipo": "entrada"
+  },
+  {
+    "descricao": "sai",
+    "valor": 300,
+    "tipo": "saida"
+  }
+]
